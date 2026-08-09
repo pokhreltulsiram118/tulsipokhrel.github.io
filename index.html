@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tulsi Ram Pokhrel — Watershed Hydrology Research</title>
+<meta name="description" content="Tulsi Ram Pokhrel — PhD Scholar in watershed hydrology and water quality modeling, South Dakota State University.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F3EEE3;
+    --paper-deep: #ECE4D3;
+    --ink: #22282B;
+    --ink-soft: #565f5f;
+    --river: #1F4B4C;
+    --river-light: #4C7A73;
+    --river-pale: #DCE7E4;
+    --sediment: #A6773D;
+    --sediment-pale: #EFE0C8;
+    --line: #D8CFBC;
+    --white: #FBF9F4;
+    --radius: 3px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+
+  a{color:var(--river); text-decoration:none;}
+  a:hover{color:var(--sediment);}
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--river);
+    outline-offset:3px;
+  }
+
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 32px;
+    position:relative;
+  }
+
+  section{
+    padding:96px 0;
+    position:relative;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--river);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:22px;
+    height:1px;
+    background:var(--river);
+    display:inline-block;
+  }
+
+  /* ===== River spine (signature element) ===== */
+  .river-spine{
+    position:fixed;
+    left:40px;
+    top:0;
+    height:100vh;
+    width:60px;
+    pointer-events:none;
+    z-index:5;
+    display:none;
+  }
+  @media (min-width:1180px){
+    .river-spine{display:block;}
+    .wrap{margin-left:120px; max-width:820px;}
+  }
+  .river-spine svg{height:100%;width:100%;overflow:visible;}
+  .river-path{
+    fill:none;
+    stroke:var(--river-light);
+    stroke-width:2;
+    opacity:0.55;
+  }
+  .river-path-fill{
+    fill:none;
+    stroke:var(--river);
+    stroke-width:2;
+    stroke-dasharray:2000;
+    stroke-dashoffset:2000;
+    transition:stroke-dashoffset 0.1s linear;
+  }
+  .river-node{
+    fill:var(--paper);
+    stroke:var(--ink-soft);
+    stroke-width:1.5;
+    r:4;
+    transition:fill 0.3s ease, stroke 0.3s ease, r 0.3s ease;
+  }
+  .river-node.active{
+    fill:var(--sediment);
+    stroke:var(--sediment);
+    r:5.5;
+  }
+
+  /* ===== Header / Hero ===== */
+  header.hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:120px 0 80px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr 220px;
+    gap:56px;
+    align-items:center;
+  }
+  @media (max-width:720px){
+    .hero-grid{grid-template-columns:1fr; text-align:center;}
+    .hero-photo{order:-1; margin:0 auto;}
+  }
+  .hero-photo{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid var(--white);
+    box-shadow:0 0 0 1px var(--line), 0 18px 40px -18px rgba(31,75,76,0.45);
+  }
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  .hero-kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--sediment);
+    margin-bottom:20px;
+  }
+  h1.hero-name{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.02;
+    margin-bottom:18px;
+  }
+  .hero-role{
+    font-size:20px;
+    color:var(--ink-soft);
+    max-width:520px;
+    margin-bottom:8px;
+    font-weight:500;
+  }
+  .hero-affil{
+    font-size:15px;
+    color:var(--ink-soft);
+    margin-bottom:30px;
+  }
+  .hero-affil strong{color:var(--ink); font-weight:600;}
+
+  .hero-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  @media (max-width:720px){ .hero-links{justify-content:center;} }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 20px;
+    border:1px solid var(--ink);
+    border-radius:2px;
+    font-size:14px;
+    font-weight:500;
+    color:var(--ink);
+    transition:all 0.2s ease;
+  }
+  .btn:hover{
+    background:var(--river);
+    border-color:var(--river);
+    color:var(--white);
+  }
+  .btn.primary{
+    background:var(--river);
+    border-color:var(--river);
+    color:var(--white);
+  }
+  .btn.primary:hover{
+    background:var(--ink);
+    border-color:var(--ink);
+  }
+
+  /* ===== Section headers ===== */
+  .section-title{
+    font-size:clamp(28px,4vw,38px);
+    margin-bottom:14px;
+  }
+  .section-lede{
+    color:var(--ink-soft);
+    font-size:16px;
+    max-width:560px;
+    margin-bottom:48px;
+  }
+
+  /* ===== About ===== */
+  .about-body{
+    font-size:18px;
+    line-height:1.75;
+    max-width:680px;
+    color:var(--ink);
+  }
+  .about-body p + p{margin-top:18px;}
+  .interests-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:36px;
+  }
+  .interest-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    padding:7px 14px;
+    background:var(--river-pale);
+    color:var(--river);
+    border-radius:20px;
+  }
+
+  /* ===== Research / Publications ===== */
+  .pub-card{
+    border-top:1px solid var(--line);
+    padding:30px 0;
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:24px;
+  }
+  @media (max-width:640px){
+    .pub-card{grid-template-columns:1fr; gap:10px;}
+  }
+  .pub-status{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:5px 0;
+  }
+  .pub-status.published{color:var(--river);}
+  .pub-status.review{color:var(--sediment);}
+  .pub-title{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:8px;
+    line-height:1.35;
+  }
+  .pub-meta{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .pub-authors{font-style:normal;}
+  .pub-authors .me{font-weight:600; color:var(--ink);}
+  .pub-doi{font-size:13.5px;}
+
+  /* ===== Timeline ===== */
+  .timeline{
+    position:relative;
+    border-left:1px solid var(--line);
+    padding-left:32px;
+  }
+  .tl-item{
+    position:relative;
+    padding-bottom:44px;
+  }
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:'';
+    position:absolute;
+    left:-37.5px;
+    top:6px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--river);
+  }
+  .tl-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--sediment);
+    margin-bottom:6px;
+  }
+  .tl-title{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .tl-org{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .tl-detail{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    max-width:560px;
+  }
+  .tl-detail ul{padding-left:18px; margin-top:6px;}
+  .tl-detail li{margin-bottom:4px;}
+
+  /* ===== Presentations ===== */
+  .pres-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:32px;
+  }
+  .pres-tab{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    padding:9px 18px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:all 0.2s ease;
+  }
+  .pres-tab.active{
+    background:var(--river);
+    border-color:var(--river);
+    color:var(--white);
+  }
+  .pres-list{list-style:none;}
+  .pres-item{
+    padding:20px 0;
+    border-top:1px solid var(--line);
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:20px;
+  }
+  @media (max-width:640px){ .pres-item{grid-template-columns:1fr; gap:6px;} }
+  .pres-year{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    color:var(--sediment);
+  }
+  .pres-title{
+    font-size:15.5px;
+    font-weight:600;
+    margin-bottom:4px;
+    line-height:1.4;
+  }
+  .pres-venue{
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .pres-item[data-type="oral"] .pres-venue::before{
+    content:'Oral · ';
+    color:var(--river);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+  }
+  .pres-item[data-type="poster"] .pres-venue::before{
+    content:'Poster · ';
+    color:var(--river-light);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+  }
+  .pres-item.hidden{display:none;}
+
+  /* ===== Skills ===== */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:28px;
+  }
+  .skill-group h4{
+    font-size:14px;
+    font-family:'IBM Plex Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--river);
+    margin-bottom:14px;
+    font-weight:500;
+  }
+  .skill-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .chip{
+    font-size:13px;
+    padding:6px 12px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:2px;
+    color:var(--ink);
+  }
+
+  /* ===== Honors ===== */
+  .honors-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+  }
+  @media (max-width:720px){ .honors-grid{grid-template-columns:1fr;} }
+  .honor-item{
+    padding:18px 0;
+    border-top:1px solid var(--line);
+  }
+  .honor-item .tl-date{margin-bottom:5px;}
+  .honor-title{
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:3px;
+    line-height:1.4;
+  }
+  .honor-org{
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .memberships{
+    margin-top:8px;
+  }
+  .membership-item{
+    font-size:14.5px;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .membership-item .mono{color:var(--sediment); font-size:12.5px;}
+
+  /* ===== Contact ===== */
+  footer.contact{
+    padding:100px 0 60px;
+    border-top:1px solid var(--line);
+  }
+  .contact-lede{
+    font-size:22px;
+    font-family:'Fraunces', serif;
+    max-width:520px;
+    margin-bottom:40px;
+    line-height:1.5;
+  }
+  .contact-links{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    max-width:420px;
+  }
+  .contact-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:16px 0;
+    border-top:1px solid var(--line);
+    font-size:15px;
+  }
+  .contact-row:last-child{border-bottom:1px solid var(--line);}
+  .contact-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+  }
+  .contact-value a{font-weight:500;}
+  .credit{
+    margin-top:60px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  /* fade-in on scroll */
+  .reveal{
+    opacity:0;
+    transform:translateY(16px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  ::selection{background:var(--sediment-pale); color:var(--ink);}
+</style>
+</head>
+<body>
+
+<!-- River spine navigation / signature element -->
+<nav class="river-spine" aria-label="Section progress">
+  <svg viewBox="0 0 60 1000" preserveAspectRatio="none">
+    <path class="river-path" d="M30,0 C30,120 15,160 30,260 C45,360 20,420 30,520 C40,620 15,680 30,780 C40,860 25,920 30,1000" />
+    <path class="river-path-fill" id="riverFill" d="M30,0 C30,120 15,160 30,260 C45,360 20,420 30,520 C40,620 15,680 30,780 C40,860 25,920 30,1000" />
+    <circle class="river-node" data-target="about" cx="30" cy="70" r="4"></circle>
+    <circle class="river-node" data-target="research" cx="20" cy="220" r="4"></circle>
+    <circle class="river-node" data-target="timeline" cx="35" cy="380" r="4"></circle>
+    <circle class="river-node" data-target="presentations" cx="22" cy="540" r="4"></circle>
+    <circle class="river-node" data-target="skills" cx="34" cy="680" r="4"></circle>
+    <circle class="river-node" data-target="honors" cx="24" cy="830" r="4"></circle>
+    <circle class="river-node" data-target="contact" cx="30" cy="960" r="4"></circle>
+  </svg>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-kicker">Dang, Nepal → Brookings, South Dakota</div>
+        <h1 class="hero-name">Tulsi Ram<br>Pokhrel</h1>
+        <p class="hero-role">Modeling where water goes, and what it carries with it.</p>
+        <p class="hero-affil">PhD Scholar, <strong>Agricultural &amp; Biosystems Engineering</strong>, South Dakota State University</p>
+        <div class="hero-links">
+          <a class="btn primary" href="mailto:Tulsi.Pokhrel@jacks.sdstate.edu">Email me</a>
+          <a class="btn" href="https://www.linkedin.com/in/tulsi-ram-pokhrel" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="Tulsi-Pokhrel-CV.pdf" target="_blank" rel="noopener">Download CV</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="images/tulsi.jpg" alt="Portrait of Tulsi Ram Pokhrel">
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="about">
+    <div class="wrap reveal">
+      <div class="eyebrow">About</div>
+      <h2 class="section-title">Where the questions started.</h2>
+      <div class="about-body">
+        <p>I grew up in Dang, Nepal, in a place with no shortage of water: rivers, streams, groundwater everywhere you looked. But growing up, I also saw the other side of that abundance: communities without safe drinking water, no testing of water quality at the source, and the recurring damage of floods in vulnerable regions.</p>
+        <p>It wasn't a lack of resources. It was a lack of management. That contradiction became clear to me during my undergraduate studies in Agricultural Engineering, and it's what pulled me toward hydrology: the idea that solving water problems in a resource-rich but management-poor context takes more than awareness. It takes rigorous, applied research, modeling and data that show where interventions actually pay off, efficiently and economically.</p>
+        <p>That's the throughline connecting my work now, from watershed modeling in South Dakota to drought assessment back home in Nepal.</p>
+      </div>
+      <div class="interests-row">
+        <span class="interest-tag">Traveling</span>
+        <span class="interest-tag">Nature</span>
+        <span class="interest-tag">Soccer</span>
+        <span class="interest-tag">Driving</span>
+        <span class="interest-tag">Dancing</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="wrap reveal">
+      <div class="eyebrow">Research</div>
+      <h2 class="section-title">Publications & Manuscripts</h2>
+      <p class="section-lede">Centered on the Seasonal Riparian Area Management (SRAM) program in eastern South Dakota, and drought assessment across Nepal's climatic regions.</p>
+
+      <div class="pub-card">
+        <div class="pub-status published">Published</div>
+        <div>
+          <div class="pub-title">Assessment of ecological and economic benefits of seasonal riparian area management in eastern South Dakota</div>
+          <div class="pub-meta pub-authors"><span class="me">Pokhrel, T.</span>, Mehan, S., Berg, B., &amp; Gilbertson, J. (2025). <em>Ecohydrology.</em></div>
+          <div class="pub-doi mono"><a href="https://doi.org/10.1002/eco.70246" target="_blank" rel="noopener">doi.org/10.1002/eco.70246</a></div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-status review">Under Review</div>
+        <div>
+          <div class="pub-title">Evaluating spatial gaps in riparian management using SWAT+: Sediment and nitrate transport in the Skunk Creek watershed, South Dakota</div>
+          <div class="pub-meta pub-authors"><span class="me">Pokhrel, T.</span>, Mehan, S., Berg, B., &amp; Gilbertson, J. (2025).</div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-status review">Under Review</div>
+        <div>
+          <div class="pub-title">Assessment of drought by analyzing the spatiotemporal distribution of ET using remote sensing across heterogeneous climatic regions of Nepal</div>
+          <div class="pub-meta pub-authors"><span class="me">Pokhrel, T.</span>, Mehan, S., Lamichhane, M., &amp; Shrestha, E. (2025).</div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-status published">Published</div>
+        <div>
+          <div class="pub-title">Assessing future irrigation demand under climate change and bilateral water sharing in the Mahakali command area</div>
+          <div class="pub-meta pub-authors">Mishra, Y., Shrestha, E., <span class="me">Pokhrel, T. R.</span>, Jha, A. N., Ghimire, S., &amp; Dhakal, S. (2026). <em>Journal of Hydrology: Regional Studies</em>, 67, 103824.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="wrap reveal">
+      <div class="eyebrow">Path</div>
+      <h2 class="section-title">Education & Experience</h2>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-date mono">June 2026 — Present</div>
+          <div class="tl-title">PhD, Agricultural &amp; Biosystems Engineering</div>
+          <div class="tl-org">South Dakota State University, Brookings, SD</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date mono">Aug 2024 — Present</div>
+          <div class="tl-title">Graduate Research Assistant</div>
+          <div class="tl-org">South Dakota State University, Brookings, SD</div>
+          <div class="tl-detail">
+            <ul>
+              <li>Apply SWAT+ and HEC-RAS to analyze watershed hydrology, flood behavior, and water-quality dynamics</li>
+              <li>Process remote sensing, climate, and soil datasets with ArcGIS, Google Earth Engine, and Python; apply machine learning for predictive modeling</li>
+              <li>Run economic analysis of conservation practices for cost-effective water-quality strategies</li>
+              <li>Measure soil hydraulic and physical properties using HYPROP, KSAT, WP4C, and PARIO</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date mono">May 2026</div>
+          <div class="tl-title">M.S., Agricultural &amp; Biosystems Engineering — GPA 4.00/4.00</div>
+          <div class="tl-org">South Dakota State University, Brookings, SD</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date mono">Nov 2021 — Jul 2024</div>
+          <div class="tl-title">Assistant Lecturer / Lecturer</div>
+          <div class="tl-org">Tribhuvan University, Nepal</div>
+          <div class="tl-detail">
+            <ul>
+              <li>Taught Hydraulics, Hydrology, Fluid Mechanics, Wastewater Engineering, and Irrigation &amp; Drainage Engineering</li>
+              <li>Designed lab sessions and field-based projects linking theory to real-world water resources applications</li>
+              <li>Mentored students in HEC-RAS and GIS-based flood modeling for final-year design projects</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date mono">Aug 2021</div>
+          <div class="tl-title">B.S., Agricultural Engineering — GPA 3.88/4.00</div>
+          <div class="tl-org">Tribhuvan University, Nepal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="presentations">
+    <div class="wrap reveal">
+      <div class="eyebrow">Dissemination</div>
+      <h2 class="section-title">Conference Presentations</h2>
+      <p class="section-lede">11 presentations across national and international venues, 2024–2026.</p>
+
+      <div class="pres-tabs" role="tablist">
+        <button class="pres-tab active" data-filter="all">All (11)</button>
+        <button class="pres-tab" data-filter="oral">Oral (5)</button>
+        <button class="pres-tab" data-filter="poster">Poster (6)</button>
+      </div>
+
+      <ul class="pres-list">
+        <li class="pres-item" data-type="oral">
+          <div class="pres-year mono">2026</div>
+          <div>
+            <div class="pres-title">Evaluating Seasonal Riparian Grazing Strategies for Sediment and Nitrate Load Reduction Using SWAT+</div>
+            <div class="pres-venue">ASABE Annual International Meeting 2026, Indianapolis, IN</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2026</div>
+          <div>
+            <div class="pres-title">Using Watershed-Scale SWAT+ Modeling and Critical Source Area Analysis to Inform Seasonal Riparian Area Management</div>
+            <div class="pres-venue">Western South Dakota Environmental and Hydrology Conference, Rapid City, SD</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2026</div>
+          <div>
+            <div class="pres-title">Using Watershed-Scale SWAT+ Modeling and Critical Source Area Analysis to Inform Seasonal Riparian Area Management</div>
+            <div class="pres-venue">ASABE North Central Intersectional Conference, St. Paul, MN</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="oral">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Environmental and Economic Efficacy of the SRAM Program in the Big Sioux River Watershed</div>
+            <div class="pres-venue">Missouri River Science and Management Symposium 2025, Vermillion, SD</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="oral">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Identification of Priority Zones for Riparian Buffer Enrollment under SRAM using SWAT+</div>
+            <div class="pres-venue">International SWAT Conference &amp; Workshops 2025, Fort Collins, CO</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="oral">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Assessment of a Nature-Based Solution: SRAM on Ecology and Economy in Skunk Creek, South Dakota</div>
+            <div class="pres-venue">South Dakota Student Water Conference 2025, Brookings, SD</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Informing Riparian Conservation through Watershed-Scale SWAT+ Simulation of Nitrate and Sediment</div>
+            <div class="pres-venue">SD ASABE Section Meeting, Brookings, SD &amp; AGU 2025 Annual Meeting, New Orleans, LA</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="oral">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Integrated Assessment of Seasonal Riparian Area Management on Vegetation Health and Water Quality</div>
+            <div class="pres-venue">ASABE North Central Intersectional Conference 2025</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Ecological and Economic Benefits of a Nature-Based Conservation Practice in Big Sioux Watershed, South Dakota</div>
+            <div class="pres-venue">Nebraska Water Conference 2025, Omaha, NE</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Assessing the Impact of Seasonal Riparian Area Management on Vegetation Health: A Remote Sensing Trend Analysis in the Skunk Creek Riparian Zone</div>
+            <div class="pres-venue">UCOWR/NIWR Annual Water Resources Conference 2025, Minneapolis, MN</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2025</div>
+          <div>
+            <div class="pres-title">Assessing the Combined Influence of Seasonal Riparian Area Management on Riparian Vegetation and Water Quality Dynamics</div>
+            <div class="pres-venue">Western South Dakota Hydrology Conference &amp; SD ASABE Section Meeting 2025, Brookings, SD</div>
+          </div>
+        </li>
+        <li class="pres-item" data-type="poster">
+          <div class="pres-year mono">2024</div>
+          <div>
+            <div class="pres-title">Spatial Variation of Water Balance Components of Tamor River Basin using SWAT</div>
+            <div class="pres-venue">South Dakota Student Water Conference 2024, Brookings, SD</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap reveal">
+      <div class="eyebrow">Toolset</div>
+      <h2 class="section-title">Skills & Tools</h2>
+
+      <div class="skills-grid">
+        <div class="skill-group">
+          <h4>Hydrologic &amp; Hydraulic Modeling</h4>
+          <div class="skill-chips">
+            <span class="chip">SWAT</span><span class="chip">SWAT+</span><span class="chip">HEC-RAS</span><span class="chip">HEC-HMS</span><span class="chip">HY-8</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Geospatial &amp; Remote Sensing</h4>
+          <div class="skill-chips">
+            <span class="chip">QGIS</span><span class="chip">ArcGIS Pro</span><span class="chip">ArcGIS Online</span><span class="chip">ENVI</span><span class="chip">Google Earth Engine</span><span class="chip">Imagine</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Data Science &amp; Machine Learning</h4>
+          <div class="skill-chips">
+            <span class="chip">Python</span><span class="chip">R</span><span class="chip">NumPy</span><span class="chip">Pandas</span><span class="chip">Matplotlib</span><span class="chip">Seaborn</span><span class="chip">Scikit-learn</span><span class="chip">TensorFlow</span><span class="chip">Keras</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Design &amp; Engineering</h4>
+          <div class="skill-chips">
+            <span class="chip">AutoCAD</span><span class="chip">Civil 3D</span><span class="chip">Excel (VBA)</span><span class="chip">Power BI</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Productivity &amp; Collaboration</h4>
+          <div class="skill-chips">
+            <span class="chip">MS Office</span><span class="chip">Teams</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="honors">
+    <div class="wrap reveal">
+      <div class="eyebrow">Recognition</div>
+      <h2 class="section-title">Honors, Leadership & Memberships</h2>
+
+      <div class="honors-grid">
+        <div>
+          <h4 style="font-size:13px; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:6px;">Honors &amp; Awards</h4>
+
+          <div class="honor-item">
+            <div class="tl-date mono">2026</div>
+            <div class="honor-title">ASABE Annual International Meeting Travel Grant</div>
+            <div class="honor-org">Agricultural &amp; Biosystems Engineering Dept., SDSU</div>
+          </div>
+          <div class="honor-item">
+            <div class="tl-date mono">2026</div>
+            <div class="honor-title">Runner-up, Student Poster Competition</div>
+            <div class="honor-org">SD ASABE Section Meeting, Brookings, SD</div>
+          </div>
+          <div class="honor-item">
+            <div class="tl-date mono">2021</div>
+            <div class="honor-title">Gold Medal — Department Topper, Agricultural Engineering</div>
+            <div class="honor-org">Institute of Engineering (IOE), 2016–2021</div>
+          </div>
+          <div class="honor-item">
+            <div class="tl-date mono">2021</div>
+            <div class="honor-title">Hutta Ram Baidya Scholarship</div>
+            <div class="honor-org">Nepalese Society of Agricultural Engineers — 1st position, B.E. Agricultural Engineering</div>
+          </div>
+          <div class="honor-item">
+            <div class="tl-date mono">2019 &amp; 2018</div>
+            <div class="honor-title">NAESS Alumni Economic Hardship Scholarship</div>
+            <div class="honor-org">Awarded in two consecutive years for academic performance</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="font-size:13px; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:6px;">Leadership</h4>
+          <div class="honor-item">
+            <div class="tl-date mono">May 2026 — Present</div>
+            <div class="honor-title">Vice President</div>
+            <div class="honor-org">Agricultural &amp; Biosystems Engineering Graduate Student Association (ABEGSA)</div>
+          </div>
+
+          <h4 style="font-size:13px; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin:32px 0 6px;">Professional Memberships</h4>
+          <div class="memberships">
+            <div class="membership-item"><span>American Geophysical Union (AGU)</span><span class="mono">2025—</span></div>
+            <div class="membership-item"><span>ASABE</span><span class="mono">2025—</span></div>
+            <div class="membership-item"><span>UCOWR / NIWR</span><span class="mono">2025—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="contact" id="contact">
+  <div class="wrap reveal">
+    <div class="eyebrow">Get in touch</div>
+    <p class="contact-lede">Open to conversations on watershed modeling, conservation policy, or collaboration across South Dakota and Nepal.</p>
+
+    <div class="contact-links">
+      <div class="contact-row">
+        <span class="contact-label">Email</span>
+        <span class="contact-value"><a href="mailto:Tulsi.Pokhrel@jacks.sdstate.edu">Tulsi.Pokhrel@jacks.sdstate.edu</a></span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">LinkedIn</span>
+        <span class="contact-value"><a href="https://www.linkedin.com/in/tulsi-ram-pokhrel" target="_blank" rel="noopener">/in/tulsi-ram-pokhrel</a></span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">Location</span>
+        <span class="contact-value">Brookings, South Dakota</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">CV</span>
+        <span class="contact-value"><a href="Tulsi-Pokhrel-CV.pdf" target="_blank" rel="noopener">Download PDF</a></span>
+      </div>
+    </div>
+
+    <div class="credit">© 2026 Tulsi Ram Pokhrel — South Dakota State University</div>
+  </div>
+</footer>
+
+<script>
+  // Reveal-on-scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // River spine fill + active node tracking
+  const riverFill = document.getElementById('riverFill');
+  const nodes = document.querySelectorAll('.river-node');
+  const sectionIds = ['about','research','timeline','presentations','skills','honors','contact'];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  const pathLength = riverFill ? riverFill.getTotalLength() : 0;
+
+  function updateRiver(){
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY;
+    const progress = docHeight > 0 ? Math.min(scrolled / docHeight, 1) : 0;
+
+    if (riverFill) {
+      riverFill.style.strokeDasharray = pathLength;
+      riverFill.style.strokeDashoffset = pathLength * (1 - progress);
+    }
+
+    let activeIndex = 0;
+    sections.forEach((sec, i) => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.5) activeIndex = i;
+    });
+    nodes.forEach((n, i) => n.classList.toggle('active', i <= activeIndex));
+  }
+
+  window.addEventListener('scroll', updateRiver, { passive: true });
+  window.addEventListener('resize', updateRiver);
+  updateRiver();
+
+  nodes.forEach(n => {
+    n.style.cursor = 'pointer';
+    n.addEventListener('click', () => {
+      const target = document.getElementById(n.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Presentations filter
+  const tabs = document.querySelectorAll('.pres-tab');
+  const items = document.querySelectorAll('.pres-item');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.dataset.filter;
+      items.forEach(item => {
+        item.classList.toggle('hidden', filter !== 'all' && item.dataset.type !== filter);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
